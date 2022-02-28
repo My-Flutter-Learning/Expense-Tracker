@@ -1,6 +1,6 @@
 # Expense Tracker
 
-This is an mobile application that allows th user to track their spending on a daily/weekly basis.
+This is an mobile application that allows the user to track their spending on a daily/weekly basis.
 
 ## Getting Started
 
