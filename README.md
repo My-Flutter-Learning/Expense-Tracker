@@ -1,6 +1,6 @@
-# expense_tracker
+# Expense Tracker
 
-A new Flutter project.
+This is an mobile application that allows th user to track their spending on a daily/weekly basis.
 
 ## Getting Started
 
