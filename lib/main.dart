@@ -29,23 +29,34 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expense Tracker',),
+        title: const Text('Expense Tracker'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
-      body:Column(
+      body: SingleChildScrollView(
+        child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
+          children: const <Widget>[
+            SizedBox(
               width: double.infinity,
-              child: const Card(
+              child: Card(
                 color: Colors.amber,
                 child: Text('CHART!'),
               ),
-              
             ),
-            const  UserTransactions()
+            UserTransactions()
           ],
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(onPressed: (() {
+        
+      }), child: const Icon(Icons.add)),
     );
     
   }
