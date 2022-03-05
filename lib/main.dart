@@ -13,7 +13,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       title: 'Expense Tracker',
-      theme: ThemeData(primarySwatch: Colors.purple, accentColor: Colors.pink[100]),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        // colorScheme: ThemeData().colorScheme.copyWith(secondary: Colors.pink), // New way of declaring the accentColor
+        accentColor: Colors.pink[100],
+        fontFamily:'Quicksand',
+        textTheme: const TextTheme(headline6: TextStyle(fontFamily: 'OpenSans'), bodyText1: TextStyle(fontFamily: 'Quicksand', fontWeight: FontWeight.bold, fontSize: 18)),
+        // appBarTheme: const AppBarTheme(titleTextStyle: TextStyle(fontFamily: 'OpenSans', fontSize: 20)) // Old ways of declaring font family for thr appBar Title
+      ),
       home: const MyHomePage(),
       
     );
