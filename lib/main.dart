@@ -11,9 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       title: 'Expense Tracker',
-      home: MyHomePage(),
+      theme: ThemeData(primarySwatch: Colors.purple, accentColor: Colors.pink[100]),
+      home: const MyHomePage(),
+      
     );
   }
 }
@@ -83,11 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
               child: Card(
-                color: Colors.amber,
-                child: Text('CHART!'),
+                color: Theme.of(context).primaryColorLight,
+                child: const Text('CHART!'),
               ),
             ),
             TransactionList(_userTransactions)
