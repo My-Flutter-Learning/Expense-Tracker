@@ -17,7 +17,7 @@ class TransactionList extends StatelessWidget {
           children: <Widget>[
             const Text('No transactions added yet.'),
             const SizedBox(height: 20),
-            SizedBox(height: 200, child: Image.asset('assets/Images/waiting.png'))
+            SizedBox(height: 200, child: Image.asset('Assets/Images/waiting.png'))
             ],
         ):
        ListView.builder(
