@@ -1,5 +1,5 @@
-import 'package:expense_tracker/widgets/chart.dart';
-import 'package:expense_tracker/widgets/new_transaction.dart';
+import './widgets/chart.dart';
+import './widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
 
 import './widgets/transaction_list.dart';
@@ -108,7 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SizedBox(width: double.infinity, child: Chart(_recentTransactions)),
+            SizedBox(
+              width: double.infinity,
+              child: Chart(_recentTransactions)
+            ),
             TransactionList(_userTransactions, _deleteTransaction)
           ],
         ),

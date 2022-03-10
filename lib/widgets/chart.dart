@@ -1,5 +1,4 @@
-import 'package:expense_tracker/widgets/chart_bar.dart';
-
+import '../widgets/chart_bar.dart';
 import '../models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -54,7 +53,7 @@ class Chart extends StatelessWidget {
               child: ChartBar(
                   data['day'] as String,
                   data['amount'] as double, 
-                  totalSpending == 0.0 ? 0.0 : (data['amount'] as double) / totalSpending
+                  totalSpending == 0.0 ? 0.0 : (data['amount'] as double) / totalSpending,
               ),
             );
           }).toList(),
