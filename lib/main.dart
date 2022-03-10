@@ -12,18 +12,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
         primarySwatch: Colors.purple,
         // colorScheme: ThemeData().colorScheme.copyWith(secondary: Colors.pink), // New way of declaring the accentColor
         accentColor: Colors.pink[100],
-        fontFamily:'Quicksand',
-        textTheme: const TextTheme(headline6: TextStyle(fontFamily: 'OpenSans'), bodyText1: TextStyle(fontFamily: 'Quicksand', fontWeight: FontWeight.bold, fontSize: 18)),
+        fontFamily: 'Quicksand',
+        textTheme: const TextTheme(
+            headline6: TextStyle(fontFamily: 'OpenSans'),
+            bodyText1: TextStyle(
+                fontFamily: 'Quicksand',
+                fontWeight: FontWeight.bold,
+                fontSize: 18)),
         // appBarTheme: const AppBarTheme(titleTextStyle: TextStyle(fontFamily: 'OpenSans', fontSize: 20)) // Old ways of declaring font family for thr appBar Title
       ),
       home: const MyHomePage(),
-      
     );
   }
 }
@@ -36,7 +40,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   final List<Transaction> _userTransactions = [
     // Transaction(
     //   id: 't1',
@@ -54,22 +57,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
-      return tx.date.isAfter(
-        DateTime.now().subtract(const Duration(days: 7))
-      );
+      return tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
     }).toList();
   }
 
   void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
-        title: title, 
+        title: title,
         amount: amount,
         date: chosenDate);
 
-  setState(() {
-    _userTransactions.add(newTx);
-  });
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    _userTransactions.removeWhere((transaction) => transaction.id == id);
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -77,10 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
         context: ctx,
         builder: (_) {
           return GestureDetector(
-            onTap: () {},
-            child: NewTransaction(_addNewTransaction),
-            behavior: HitTestBehavior.opaque
-            );
+              onTap: () {},
+              child: NewTransaction(_addNewTransaction),
+              behavior: HitTestBehavior.opaque);
         });
   }
 
@@ -101,17 +105,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: Chart(_recentTransactions)
-              ),
-            TransactionList(_userTransactions)
+            SizedBox(width: double.infinity, child: Chart(_recentTransactions)),
+            TransactionList(_userTransactions, _deleteTransaction)
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-          onPressed:(() => _startAddNewTransaction(context)), child: const Icon(Icons.add)),
+          onPressed: (() => _startAddNewTransaction(context)),
+          child: const Icon(Icons.add)),
     );
   }
 }
