@@ -40,20 +40,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.99,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Weekly Groceries',
-    //   amount: 34.56,
-    //   date: DateTime.now(),
-    // )
-  ];
+  final List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -93,8 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    final appBar = AppBar(
         title: const Text('Expense Tracker'),
         actions: <Widget>[
           IconButton(
@@ -102,7 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.add),
           ),
         ],
-      ),
+      );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -110,9 +98,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             SizedBox(
               width: double.infinity,
-              child: Chart(_recentTransactions)
+              child: SizedBox(
+                height: (MediaQuery.of(context).size.height -appBar.preferredSize.height -MediaQuery.of(context).padding.top) * 0.3,
+                child: Chart(_recentTransactions)
+              )
             ),
-            TransactionList(_userTransactions, _deleteTransaction)
+            SizedBox(
+              height: (MediaQuery.of(context).size.height -appBar.preferredSize.height -MediaQuery.of(context).padding.top) * 0.7,
+              child: TransactionList(_userTransactions, _deleteTransaction)
+            )
           ],
         ),
       ),
