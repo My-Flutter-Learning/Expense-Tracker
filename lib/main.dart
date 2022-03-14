@@ -87,13 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape =
         mediaQuery.orientation == Orientation.landscape;
-    final appBar = 
-    Platform.isIOS? CupertinoNavigationBar(
+    final PreferredSizeWidget appBar = 
+    (Platform.isIOS? CupertinoNavigationBar(
       middle: const Text('Expense Tracker'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-        GestureDetector(child: const Icon(CupertinoIcons.add), onTap: (() => _startAddNewTransaction(context)),)
+        CupertinoButton(
+          padding: const EdgeInsets.all(0),
+          child: const Icon(CupertinoIcons.add),
+          onPressed: (() => _startAddNewTransaction(context)),
+        )
       ],),
     ) 
     :AppBar(
@@ -104,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.add),
         ),
       ],
-    );
+    )) as PreferredSizeWidget;
     final txList = SizedBox(
       height: (mediaQuery.size.height -
               appBar.preferredSize.height -
