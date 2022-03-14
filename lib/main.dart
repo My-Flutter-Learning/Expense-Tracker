@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import './models/transaction.dart';
 import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
@@ -86,7 +87,16 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape =
         mediaQuery.orientation == Orientation.landscape;
-    final appBar = AppBar(
+    final appBar = 
+    Platform.isIOS? CupertinoNavigationBar(
+      middle: const Text('Expense Tracker'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+        GestureDetector(child: const Icon(CupertinoIcons.add), onTap: (() => _startAddNewTransaction(context)),)
+      ],),
+    ) 
+    :AppBar(
       title: const Text('Expense Tracker'),
       actions: <Widget>[
         IconButton(
@@ -102,9 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -152,7 +160,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   : txList
           ],
         ),
-      ),
+      );
+    return 
+    Platform.isIOS ? 
+    CupertinoPageScaffold(child: pageBody, navigationBar: appBar as ObstructingPreferredSizeWidget,) 
+    :Scaffold(
+      appBar: appBar,
+      body: pageBody,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: 
       Platform.isIOS ? Container()
