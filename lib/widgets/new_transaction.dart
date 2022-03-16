@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:expense_tracker/widgets/adaptive_textbutton.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
