@@ -42,10 +42,27 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _userTransactions = [];
 
   bool _showChart = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -82,63 +99,76 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  List <Widget> _buildLandscapeContent (MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
-    return [Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Show Chart', style: Theme.of(context).textTheme.bodyText1,),
-        Switch.adaptive(
-          activeColor: Theme.of(context).accentColor,
-          value: _showChart,
-          onChanged: (val) {
-            setState(() {
-              _showChart = val;
-            });
-          },
-        ),
-      ],
-    ),
-    _showChart
-    ? SizedBox(
+  List<Widget> _buildLandscapeContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Show Chart',
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          Switch.adaptive(
+            activeColor: Theme.of(context).accentColor,
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? SizedBox(
+              width: double.infinity,
+              child: SizedBox(
+                height: (mediaQuery.size.height -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top) *
+                    0.7,
+                child: Chart(_recentTransactions),
+              ),
+            )
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPotraitContent(MediaQueryData mediaQuery,
+      PreferredSizeWidget appBar, Widget txListWidget) {
+    return [
+      SizedBox(
         width: double.infinity,
         child: SizedBox(
-          height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
+          height: (mediaQuery.size.height -
+                  appBar.preferredSize.height -
+                  mediaQuery.padding.top) *
+              0.3,
           child: Chart(_recentTransactions),
         ),
-      )
-    : txListWidget];
+      ),
+      txListWidget
+    ];
   }
 
-  List <Widget> _buildPotraitContent (MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
-    return [SizedBox(
-                  width: double.infinity,
-                  child: SizedBox(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.3,
-                    child: Chart(_recentTransactions),
-                  ),
-                ), txListWidget];
-  }
-
-  PreferredSizeWidget _buildCupertinoNavBar(){
+  PreferredSizeWidget _buildCupertinoNavBar() {
     return CupertinoNavigationBar(
       middle: const Text('Expense Tracker'),
       trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CupertinoButton(
-              padding: const EdgeInsets.all(0),
-              child: const Icon(CupertinoIcons.add),
-              onPressed: (() => _startAddNewTransaction(context)),
-            )
-          ],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CupertinoButton(
+            padding: const EdgeInsets.all(0),
+            child: const Icon(CupertinoIcons.add),
+            onPressed: (() => _startAddNewTransaction(context)),
+          )
+        ],
       ),
     );
   }
 
-  PreferredSizeWidget _buildMaterialAppBar () {
+  PreferredSizeWidget _buildMaterialAppBar() {
     return AppBar(
       title: const Text('Expense Tracker'),
       actions: <Widget>[
@@ -149,49 +179,55 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
     print('build() MyHomePageState');
 
     final mediaQuery = MediaQuery.of(context);
 
-    final isLandscape =
-        mediaQuery.orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final PreferredSizeWidget appBar = Platform.isIOS 
-    ? _buildCupertinoNavBar()
-    : _buildMaterialAppBar();
+    final PreferredSizeWidget appBar =
+        Platform.isIOS ? _buildCupertinoNavBar() : _buildMaterialAppBar();
 
     final txList = SizedBox(
-                      height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
-                      child: TransactionList(_userTransactions, _deleteTransaction),
-                    );
+      height: (mediaQuery.size.height -
+              appBar.preferredSize.height -
+              mediaQuery.padding.top) *
+          0.7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
 
     final pageBody = SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              if (isLandscape) ..._buildLandscapeContent(mediaQuery, appBar, txList),
-              if (!isLandscape) ..._buildPotraitContent(mediaQuery, appBar, txList),],
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            if (isLandscape)
+              ..._buildLandscapeContent(mediaQuery, appBar, txList),
+            if (!isLandscape)
+              ..._buildPotraitContent(mediaQuery, appBar, txList),
+          ],
         ),
-      );
-    return 
-    Platform.isIOS ? 
-    CupertinoPageScaffold(child: pageBody, navigationBar: appBar as ObstructingPreferredSizeWidget,) 
-    :Scaffold(
-      appBar: appBar,
-      body: pageBody,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: 
-      Platform.isIOS ? Container()
-      :FloatingActionButton(
-          onPressed: (() => _startAddNewTransaction(context)),
-          child: const Icon(Icons.add)),
+      ),
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar as ObstructingPreferredSizeWidget,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: (() => _startAddNewTransaction(context)),
+                    child: const Icon(Icons.add)),
+          );
   }
 }
