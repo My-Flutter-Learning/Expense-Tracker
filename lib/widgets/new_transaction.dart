@@ -6,12 +6,12 @@ class NewTransaction extends StatefulWidget {
   final Function addTransaction;
 
   NewTransaction(this.addTransaction, {Key? key}) : super(key: key) {
-    print('Constructor NewTransaction Widget');
+    debugPrint('Constructor NewTransaction Widget');
   }
 
   @override
   State<NewTransaction> createState() {
-    print('createState NewTransaction Widget');
+    debugPrint('createState NewTransaction Widget');
     return _NewTransactionState();
   }
 }
@@ -22,24 +22,24 @@ class _NewTransactionState extends State<NewTransaction> {
   DateTime? _pickedDate;
 
   _NewTransactionState() {
-    print('Constructor NewTransaction State');
+    debugPrint('Constructor NewTransaction State');
   }
 
   @override
   void initState() {
-    print('initState()');
+    debugPrint('initState()');
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant NewTransaction oldWidget) {
-    print('didUpdateWidget()');
+    debugPrint('didUpdateWidget()');
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
-    print('dispose()');
+    debugPrint('dispose()');
     super.dispose();
   }
 
