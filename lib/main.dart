@@ -18,16 +18,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        // colorScheme: ThemeData().colorScheme.copyWith(secondary: Colors.pink), // New way of declaring the accentColor
-        accentColor: Colors.pink[100],
         fontFamily: 'Quicksand',
         textTheme: const TextTheme(
-            headline6: TextStyle(fontFamily: 'OpenSans'),
-            bodyText1: TextStyle(
-                fontFamily: 'Quicksand',
-                fontWeight: FontWeight.bold,
-                fontSize: 18)),
+          titleLarge: TextStyle(fontFamily: 'OpenSans'),
+          bodyLarge: TextStyle(
+            fontFamily: 'Quicksand',
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.purple,
+        ).copyWith(
+          secondary: Colors.pink[100],
+        ),
         // appBarTheme: const AppBarTheme(titleTextStyle: TextStyle(fontFamily: 'OpenSans', fontSize: 20)) // Old ways of declaring font family for thr appBar Title
       ),
       home: const MyHomePage(),
@@ -49,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -60,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -71,11 +75,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void _addNewTransaction(String title, double amount, DateTime chosenDate) {
-    final newTx = Transaction(
-        id: DateTime.now().toString(),
-        title: title,
-        amount: amount,
-        date: chosenDate);
+    final newTx =
+        Transaction(id: DateTime.now().toString(), title: title, amount: amount, date: chosenDate);
 
     setState(() {
       _userTransactions.add(newTx);
@@ -94,23 +95,23 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         builder: (_) {
           return GestureDetector(
               onTap: () {},
-              child: NewTransaction(_addNewTransaction),
-              behavior: HitTestBehavior.opaque);
+              behavior: HitTestBehavior.opaque,
+              child: NewTransaction(_addNewTransaction));
         });
   }
 
-  List<Widget> _buildLandscapeContent(MediaQueryData mediaQuery,
-      PreferredSizeWidget appBar, Widget txListWidget) {
+  List<Widget> _buildLandscapeContent(
+      MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             'Show Chart',
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           Switch.adaptive(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
             value: _showChart,
             onChanged: (val) {
               setState(() {
@@ -135,16 +136,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     ];
   }
 
-  List<Widget> _buildPotraitContent(MediaQueryData mediaQuery,
-      PreferredSizeWidget appBar, Widget txListWidget) {
+  List<Widget> _buildPotraitContent(
+      MediaQueryData mediaQuery, PreferredSizeWidget appBar, Widget txListWidget) {
     return [
       SizedBox(
         width: double.infinity,
         child: SizedBox(
-          height: (mediaQuery.size.height -
-                  appBar.preferredSize.height -
-                  mediaQuery.padding.top) *
-              0.3,
+          height:
+              (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.3,
           child: Chart(_recentTransactions),
         ),
       ),
@@ -160,8 +159,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         children: [
           CupertinoButton(
             padding: const EdgeInsets.all(0),
-            child: const Icon(CupertinoIcons.add),
             onPressed: (() => _startAddNewTransaction(context)),
+            child: const Icon(CupertinoIcons.add),
           )
         ],
       ),
@@ -192,10 +191,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         Platform.isIOS ? _buildCupertinoNavBar() : _buildMaterialAppBar();
 
     final txList = SizedBox(
-      height: (mediaQuery.size.height -
-              appBar.preferredSize.height -
-              mediaQuery.padding.top) *
-          0.7,
+      height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
@@ -205,29 +201,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isLandscape)
-              ..._buildLandscapeContent(mediaQuery, appBar, txList),
-            if (!isLandscape)
-              ..._buildPotraitContent(mediaQuery, appBar, txList),
+            if (isLandscape) ..._buildLandscapeContent(mediaQuery, appBar, txList),
+            if (!isLandscape) ..._buildPotraitContent(mediaQuery, appBar, txList),
           ],
         ),
       ),
     );
     return Platform.isIOS
         ? CupertinoPageScaffold(
-            child: pageBody,
             navigationBar: appBar as ObstructingPreferredSizeWidget,
+            child: pageBody,
           )
         : Scaffold(
             appBar: appBar,
             body: pageBody,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Platform.isIOS
                 ? Container()
                 : FloatingActionButton(
                     onPressed: (() => _startAddNewTransaction(context)),
-                    child: const Icon(Icons.add)),
+                    child: const Icon(Icons.add),
+                  ),
           );
   }
 }
