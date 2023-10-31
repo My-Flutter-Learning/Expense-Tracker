@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
             fontSize: 18,
           ),
         ),
+        primaryColor: Colors.purple,
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: Colors.purple,
         ).copyWith(

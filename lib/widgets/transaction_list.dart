@@ -7,8 +7,7 @@ class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteTx;
 
-  const TransactionList(this.transactions, this.deleteTx, {Key? key})
-      : super(key: key);
+  const TransactionList(this.transactions, this.deleteTx, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,15 @@ class TransactionList extends StatelessWidget {
             );
           })
         : ListView(
-          children: transactions.map((tx) => TransactionItem( key: ValueKey(tx.id), transaction: tx, deleteTx: deleteTx)).toList()
+            children: transactions
+                .map(
+                  (tx) => TransactionItem(
+                    key: ValueKey(tx.id),
+                    transaction: tx,
+                    deleteTx: deleteTx,
+                  ),
+                )
+                .toList(),
           );
   }
 }
