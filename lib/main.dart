@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state);
+    debugPrint(state.toString());
   }
 
   @override
@@ -76,11 +76,34 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void _addNewTransaction(String title, double amount, DateTime chosenDate) {
-    final newTx =
-        Transaction(id: DateTime.now().toString(), title: title, amount: amount, date: chosenDate);
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      title: title,
+      amount: amount,
+      date: chosenDate,
+    );
 
     setState(() {
       _userTransactions.add(newTx);
+    });
+  }
+
+  void _editTransaction(
+    String id,
+    String title,
+    double amount,
+    DateTime chosenDate,
+  ) {
+    setState(() {
+      _userTransactions.firstWhere((transaction) {
+        if (transaction.id == id) {
+          transaction.title = title;
+          transaction.amount = amount;
+          transaction.date = chosenDate;
+          return true;
+        }
+        return false;
+      });
     });
   }
 
@@ -182,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('build() MyHomePageState');
+    debugPrint('build() MyHomePageState');
 
     final mediaQuery = MediaQuery.of(context);
 
@@ -193,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
     final txList = SizedBox(
       height: (mediaQuery.size.height - appBar.preferredSize.height - mediaQuery.padding.top) * 0.7,
-      child: TransactionList(_userTransactions, _deleteTransaction),
+      child: TransactionList(_userTransactions, _editTransaction, _deleteTransaction),
     );
 
     final pageBody = SafeArea(
@@ -208,6 +231,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         ),
       ),
     );
+
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: appBar as ObstructingPreferredSizeWidget,
